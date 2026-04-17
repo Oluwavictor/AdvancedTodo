@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo Card</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <article data-testid="test-todo-card" id="todo-card">
+
+      <!-- Priority Indicator -->
+      <!-- <div
+        data-testid="test-todo-priority-indicator"
+        id="priority-indicator"
+        aria-hidden="true"
+      ></div> -->
+
+      <!-- always visible by default -->
+      <div id="view-mode">
+
+        <!-- priority badge -->
+        <div class="card-top">
+          <div class="checkbox-row">
+            <input
+              type="checkbox"
+              id="complete-toggle"
+              data-testid="test-todo-complete-toggle"
+              aria-label="Mark task as complete"
+            />
+            <label for="complete-toggle">Mark complete</label>
+          </div>
+
+          <span
+            data-testid="test-todo-priority"
+            id="priority-badge"
+            class="badge priority-high"
+            aria-label="Priority: High"
+          >High</span>
+        </div>
+
+        <!-- Title -->
+        <h2 data-testid="test-todo-title">Redesign Dashboard UI</h2>
+
+        <!-- Description -->
+        <div class="description-wrap">
+          <p
+            data-testid="test-todo-description"
+            id="collapsible-section"
+            data-testid-2="test-todo-collapsible-section"
+            class="collapsed"
+          >
+            Revamp the main dashboard with new analytics widgets, updated color
+            palette, improved navigation flow, and a fully responsive layout that
+            works across all screen sizes from 320px mobile up to large desktop
+            monitors. Coordinate with the backend team on new API endpoints needed
+            for the widgets.
+          </p>
+          <button
+            data-testid="test-todo-expand-toggle"
+            id="expand-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="collapsible-section"
+            class="expand-toggle"
+          >Show more</button>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- Meta -->
+        <div class="meta-section">
+
+          <div class="meta-row">
+            <span class="meta-label">Status</span>
+            <div class="meta-value status-value">
+              <span
+                data-testid="test-todo-status"
+                id="status-badge"
+                class="badge status-progress"
+                aria-live="polite"
+              >In Progress</span>
+              <label for="status-control" class="sr-only">Task status</label>
+              <select
+                id="status-control"
+                data-testid="test-todo-status-control"
+                aria-label="Task status"
+              >
+                <option value="Pending">Pending</option>
+                <option value="In Progress" selected>In Progress</option>
+                <option value="Done">Done</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="meta-row">
+            <span class="meta-label">Due</span>
+            <time
+              data-testid="test-todo-due-date"
+              data-due="2025-08-20T17:00:00"
+              class="meta-value"
+            ></time>
+          </div>
+
+          <div class="meta-row">
+            <span class="meta-label">Remaining</span>
+            <div class="meta-value remaining-value">
+              <time
+                data-testid="test-todo-time-remaining"
+                data-due="2025-08-20T17:00:00"
+                aria-live="polite"
+              ></time>
+              <span
+                data-testid="test-todo-overdue-indicator"
+                id="overdue-indicator"
+                class="overdue-indicator"
+                role="alert"
+                hidden
+              > Overdue</span>
+            </div>
+          </div>
+
+        </div>
+
+        <hr class="divider" />
+
+        <!-- Tags -->
+        <ul role="list" data-testid="test-todo-tags" class="tags-list">
+          <li data-testid="test-todo-tag-design">Design</li>
+          <li data-testid="test-todo-tag-ui">UI</li>
+          <li data-testid="test-todo-tag-dashboard">Dashboard</li>
+        </ul>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button
+            data-testid="test-todo-edit-button"
+            id="edit-btn"
+            aria-label="Edit task"
+            type="button"
+            class="btn-edit"
+          > Edit</button>
+          <button
+            data-testid="test-todo-delete-button"
+            aria-label="Delete task"
+            type="button"
+            class="btn-delete"
+          > Delete</button>
+        </div>
+
+      </div>
+      <!-- /view-mode -->
+
+    </article>
+
+
+    <!-- EDIT MODAL -->
+    <div
+      id="edit-modal-overlay"
+      class="modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="edit-modal-title"
+      hidden
+    >
+      <div class="modal" id="edit-modal">
+
+        <!-- Modal header -->
+        <div class="modal-header">
+          <h3 id="edit-modal-title" class="modal-title">Edit Task</h3>
+          <button
+            type="button"
+            id="edit-close-btn"
+            class="modal-close"
+            aria-label="Close edit form"
+          >✕</button>
+        </div>
+
+        <!-- Modal form -->
+        <form
+          data-testid="test-todo-edit-form"
+          id="edit-form"
+          novalidate
+        >
+
+          <div class="form-group">
+            <label for="edit-title">Title</label>
+            <input
+              type="text"
+              id="edit-title"
+              data-testid="test-todo-edit-title-input"
+              placeholder="Task title"
+              required
+            />
+            <span class="field-error" id="title-error" hidden>
+              Title is required.
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-description">Description</label>
+            <textarea
+              id="edit-description"
+              data-testid="test-todo-edit-description-input"
+              rows="4"
+              placeholder="Task description"
+            ></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit-priority">Priority</label>
+              <select
+                id="edit-priority"
+                data-testid="test-todo-edit-priority-select"
+              >
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High" selected>High</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-due-date">Due Date</label>
+              <input
+                type="datetime-local"
+                id="edit-due-date"
+                data-testid="test-todo-edit-due-date-input"
+              />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="submit"
+              data-testid="test-todo-save-button"
+              class="btn-save"
+            >Save changes</button>
+            <button
+              type="button"
+              data-testid="test-todo-cancel-button"
+              id="cancel-btn"
+              class="btn-cancel"
+            >Cancel</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+    <!-- /edit-modal-overlay -->
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
